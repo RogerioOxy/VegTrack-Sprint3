@@ -19,4 +19,4 @@ O vídeo final tem **2min55s**. Foi gravado no emulador Android 14, com a base d
 
 A foto usada no fluxo é licenciada e identificada como exemplo. Os dados, o GPS e as integrações são simulados. O vídeo não apresenta esses recursos como captura real em campo.
 
-A gravação está concluída. A publicação no YouTube deve usar a opção **não listado**; o link será incluído no README e no TXT final depois de conferido.
+[Vídeo publicado no YouTube](https://www.youtube.com/watch?v=QTra6W7b7rU), com visibilidade **não listado**. Duração e acesso pelo link conferidos.

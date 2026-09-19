@@ -55,7 +55,7 @@ São contas fictícias. Não use senhas pessoais. O login não consulta servidor
 
 ## Status por funcionalidade
 
-Os fluxos foram verificados no Android 14 emulado, com testes complementares no navegador. O PDF também foi gerado no Android, salvo e conferido. A demonstração foi gravada com 2min55s; a publicação no YouTube está na etapa final.
+Os fluxos foram verificados no Android 14 emulado, com testes complementares no navegador. O PDF também foi gerado no Android, salvo e conferido. A demonstração foi gravada no Android e publicada como não listada, com 2min55s.
 
 | Requisito | Comportamento da Sprint 3 | Situação |
 |---|---|---|
@@ -116,6 +116,6 @@ Os problemas encontrados e os ajustes já testados estão no documento de testes
 
 ## Demonstração e entrega
 
-Veja [Roteiro do vídeo](docs/ROTEIRO-VIDEO.md). A gravação da Sprint 3 está concluída (2min55s), com legendas e imagens reais do emulador Android. O link não listado será incluído após a publicação. O vídeo da Sprint 2 não comprova esta versão.
+Veja [Roteiro do vídeo](docs/ROTEIRO-VIDEO.md). [Assistir à demonstração da Sprint 3 no YouTube](https://www.youtube.com/watch?v=QTra6W7b7rU), não listada, com 2min55s. O vídeo tem legendas e imagens reais do emulador Android. O vídeo da Sprint 2 não comprova esta versão.
 
 O envio formal contém apenas um TXT com integrantes confirmados, repositório atualizado e vídeo da Sprint 3.

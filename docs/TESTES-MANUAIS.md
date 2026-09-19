@@ -55,11 +55,11 @@ Os onze fluxos abaixo foram percorridos no navegador integrado, em 390 x 844, 10
 - O banner de sincronização foi atualizado para não exibir texto incorreto ao gestor.
 - O cadastro, a persistência e as transições usam o mesmo motor validado pelos testes automatizados.
 
-## Pendências para a entrega
+## Conferência da entrega
 
 1. Vídeo gravado e montado com 2min55s, dentro do limite de três minutos.
-2. Publicar o vídeo como não listado e conferir o acesso pelo link.
-3. O repositório já está publicado. Preencher o TXT final com esse endereço e o link real do vídeo.
+2. Vídeo publicado como não listado, com duração e reprodução conferidas no YouTube.
+3. Repositório publicado e TXT final preenchido com os dois links reais e a identificação da dupla.
 
 ## Evidências incluídas no repositório
 
