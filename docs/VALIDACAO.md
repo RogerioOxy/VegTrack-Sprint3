@@ -38,7 +38,11 @@ O relatório demonstrativo foi salvo com uma página e uma fotografia de exemplo
 - Android foi validado em emulador, sem alegação de teste em aparelho físico.
 - iOS não foi executado.
 - O vídeo da Sprint 3 foi gravado e montado com 175 segundos (2min55s). O link do YouTube será incluído após a publicação.
-- O repositório ainda precisa ser publicado no destino final antes do preenchimento do TXT de entrega.
+- O código está publicado em https://github.com/RogerioOxy/VegTrack-Sprint3.
 - Push em segundo plano, câmera real, GPS real, API e autenticação de produção continuam pendentes.
 
-O estado técnico está validado para a demonstração em Android, mas a entrega formal somente estará pronta depois da publicação do vídeo, do repositório e do TXT final.
+O estado técnico está validado para a demonstração em Android, mas a entrega formal somente estará pronta depois da publicação do vídeo e do preenchimento do TXT final.
+
+## Integridade do vídeo local
+
+Arquivo H.264, 720 x 1660, 24 fps, com 4.200 frames e 175 segundos. A decodificação integral terminou sem erro. A revisão dos quadros confirmou identificação correta da dupla, legendas legíveis e ausência de cortes materiais na interface. O vídeo usa somente a gravação do app no emulador, além das cartelas de abertura e encerramento.

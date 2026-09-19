@@ -59,7 +59,7 @@ Os onze fluxos abaixo foram percorridos no navegador integrado, em 390 x 844, 10
 
 1. Vídeo gravado e montado com 2min55s, dentro do limite de três minutos.
 2. Publicar o vídeo como não listado e conferir o acesso pelo link.
-3. Publicar o repositório atualizado e preencher o TXT final apenas com links reais.
+3. O repositório já está publicado. Preencher o TXT final com esse endereço e o link real do vídeo.
 
 ## Evidências incluídas no repositório
 
