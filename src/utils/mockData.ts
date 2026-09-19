@@ -1,6 +1,6 @@
 // ============================================================
-// VEGTRACK — Mock de Dados Realistas
-// Contexto: Concessionária Motiva | SP-021 Rodovia Anchieta
+// VEGTRACK: dados fictícios para demonstração acadêmica
+// Contexto: concessionária fictícia | rodovia demonstrativa SP-021
 // Trechos: KM 23 a KM 67 | Supervisão: Cadú Rocha
 // ============================================================
 
@@ -17,7 +17,7 @@ export const mockUser = {
   cargo: 'Supervisor de Conservação e Operações de Campo',
   perfil: 'supervisor' as const,
   trechoGerenciado: { kmInicial: 23, kmFinal: 67 },
-  rodovia: 'SP-021 — Rodovia Anchieta',
+  rodovia: 'SP-021, rodovia demonstrativa',
   avatar: null,
 };
 
@@ -146,6 +146,12 @@ export interface OrdemServico {
   motivaBloqueio?: string;
   equipeResponsavel?: string;
   observacoes?: string;
+  concluidaEm?: string;
+  fotoUri?: string;
+  lat?: number;
+  lng?: number;
+  accuracy?: number;
+  concluidaPor?: string;
 }
 
 export const mockOrdens: OrdemServico[] = [
@@ -160,8 +166,8 @@ export const mockOrdens: OrdemServico[] = [
     urgencia: 'critica',
     prazoHoras: 48,
     criadaEm: '2025-06-03T08:00:00Z',
-    equipeResponsavel: 'Equipe Ômega — Roçada Mecânica',
-    observacoes: 'Vegetação 52cm — Nível 3 ARTESP. Risco de encobrimento de sinalização km 31.3.',
+    equipeResponsavel: 'Equipe Ômega : Roçada Mecânica',
+    observacoes: 'Vegetação de 52 cm, nível 3 no critério simulado. Conferir sinalização no KM 31,3.',
   },
   {
     id: 'os_002',
@@ -174,8 +180,8 @@ export const mockOrdens: OrdemServico[] = [
     urgencia: 'critica',
     prazoHoras: 48,
     criadaEm: '2025-06-03T08:05:00Z',
-    motivaBloqueio: 'ALERTA AMBIENTAL: Período reprodutivo ativo de Bothrops jararaca. Roçada mecanizada bloqueada. Substituída por roçada manual seletiva.',
-    equipeResponsavel: 'Equipe Alfa — Roçada Manual',
+    motivaBloqueio: 'Regra fictícia ativa em junho: execução mecanizada indisponível. A ordem manual aguarda liberação explícita para início.',
+    equipeResponsavel: 'Equipe Alfa : Roçada Manual',
   },
   {
     id: 'os_003',
@@ -188,8 +194,8 @@ export const mockOrdens: OrdemServico[] = [
     urgencia: 'critica',
     prazoHoras: 48,
     criadaEm: '2025-05-29T07:30:00Z',
-    equipeResponsavel: 'Equipe Beta — Roçada Manual',
-    observacoes: 'Restrição Sabiá-laranjeira ativa (ago–dez). Somente intervenção manual autorizada.',
+    equipeResponsavel: 'Equipe Beta : Roçada Manual',
+    observacoes: 'Método manual definido para esta ordem demonstrativa. O calendário simula restrição entre agosto e dezembro.',
   },
   {
     id: 'os_004',
@@ -202,7 +208,7 @@ export const mockOrdens: OrdemServico[] = [
     urgencia: 'urgente',
     prazoHoras: 72,
     criadaEm: '2025-06-01T10:00:00Z',
-    equipeResponsavel: 'Equipe Ômega — Roçada Mecânica',
+    equipeResponsavel: 'Equipe Ômega : Roçada Mecânica',
   },
   {
     id: 'os_005',
@@ -215,7 +221,7 @@ export const mockOrdens: OrdemServico[] = [
     urgencia: 'normal',
     prazoHoras: 120,
     criadaEm: '2025-05-15T09:00:00Z',
-    equipeResponsavel: 'Equipe Ômega — Roçada Mecânica',
+    equipeResponsavel: 'Equipe Ômega : Roçada Mecânica',
   },
 ];
 
@@ -230,6 +236,8 @@ export interface EspecieRestricao {
   tipoRestricao: string;
   kmAfetados: string;
   nivelRisco: 'alto' | 'medio';
+  meses?: number[];
+  trechoIds?: string[];
 }
 
 export const mockFauna: EspecieRestricao[] = [
@@ -239,9 +247,11 @@ export const mockFauna: EspecieRestricao[] = [
     nomePopular: 'Sabiá-laranjeira',
     periodoRestricao: 'Agosto a Dezembro',
     mesInicio: 8, mesFim: 12,
-    tipoRestricao: 'Proibido roçada mecanizada. Somente corte manual a >50cm da margem de arbustos.',
-    kmAfetados: 'KM 23.0 – 24.5 | KM 45.0 – 46.5',
+    tipoRestricao: 'Regra do protótipo: execução mecanizada indisponível no período. Usar método manual seletivo.',
+    kmAfetados: 'KM 23,0 a 23,5',
     nivelRisco: 'alto',
+    meses: [8, 9, 10, 11, 12],
+    trechoIds: ['trecho_001'],
   },
   {
     id: 'fauna_002',
@@ -249,9 +259,11 @@ export const mockFauna: EspecieRestricao[] = [
     nomePopular: 'Jararaca',
     periodoRestricao: 'Março a Junho (acasalamento) e Outubro a Novembro (filhotes)',
     mesInicio: 3, mesFim: 6,
-    tipoRestricao: 'Proibido roçada mecanizada pesada. Equipe de campo com EPI específico obrigatório. Roçada manual com inspeção prévia.',
-    kmAfetados: 'KM 31.5 – 33.0 | KM 55.0 – 57.0',
+    tipoRestricao: 'Regra do protótipo: execução mecanizada indisponível no período. Usar método manual seletivo.',
+    kmAfetados: 'KM 31,5 a 32,0',
     nivelRisco: 'alto',
+    meses: [3, 4, 5, 6, 10, 11],
+    trechoIds: ['trecho_005'],
   },
   {
     id: 'fauna_003',
@@ -259,9 +271,11 @@ export const mockFauna: EspecieRestricao[] = [
     nomePopular: 'Gambá-de-orelha-branca',
     periodoRestricao: 'Janeiro a Março (lactação)',
     mesInicio: 1, mesFim: 3,
-    tipoRestricao: 'Reduzir velocidade de roçadeiras. Inspeção manual prévia de arbustos com mais de 40cm.',
-    kmAfetados: 'KM 40.0 – 42.5',
+    tipoRestricao: 'Regra do protótipo: execução mecanizada indisponível no período. Usar método manual seletivo.',
+    kmAfetados: 'KM 45,0 a 45,5',
     nivelRisco: 'medio',
+    meses: [1, 2, 3],
+    trechoIds: ['trecho_006'],
   },
 ];
 
@@ -280,6 +294,8 @@ export interface Levantamento {
   lng: number;
   temFoto: boolean;
   observacoes?: string;
+  fotoUri?: string;
+  accuracy?: number;
 }
 
 export const mockHistoricoLevantamentos: Levantamento[] = [
@@ -290,7 +306,7 @@ export const mockHistoricoLevantamentos: Levantamento[] = [
     alturaVegetacaoCm: 47, nivelArtesp: 3,
     dataRegistro: '2025-05-28T08:14:00Z',
     tecnicoNome: 'João Moreira', lat: -23.7421, lng: -46.5812,
-    temFoto: true,
+    temFoto: false,
     observacoes: 'Vegetação densa próxima à placa de sinalização de velocidade. Visibilidade comprometida.',
   },
   {
@@ -309,7 +325,7 @@ export const mockHistoricoLevantamentos: Levantamento[] = [
     alturaVegetacaoCm: 18, nivelArtesp: 2,
     dataRegistro: '2025-03-28T07:45:00Z',
     tecnicoNome: 'Carlos Rocha (Cadú)', lat: -23.7421, lng: -46.5812,
-    temFoto: true,
+    temFoto: false,
   },
 ];
 

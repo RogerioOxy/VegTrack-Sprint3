@@ -1,260 +1,65 @@
 import React, { useState } from 'react';
-import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, StatusBar,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useAppStore } from '../store/AppContext';
-import { Card, Divider } from '../components/index';
-import { Colors, Typography, Spacing, BorderRadius, Shadow } from '../utils/theme';
+import { AppIcon, Card, Content, DemoBadge, Divider, MessageBanner, Page, Pill, ScreenHeader, SectionHeader, StatePanel } from '../components';
+import { BorderRadius, Colors, Spacing, Typography } from '../utils/theme';
 import { EspecieRestricao } from '../utils/mockData';
 
-const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-const MES_ATUAL = new Date().getMonth() + 1; // 1-12
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
-function CalendarioEspecie({ especie }: { especie: EspecieRestricao }) {
+function monthList(species: EspecieRestricao): number[] {
+  if (species.meses?.length) return species.meses;
+  if (species.mesInicio <= species.mesFim) return Array.from({ length: species.mesFim - species.mesInicio + 1 }, (_, index) => species.mesInicio + index);
+  return [...Array.from({ length: 13 - species.mesInicio }, (_, index) => species.mesInicio + index), ...Array.from({ length: species.mesFim }, (_, index) => index + 1)];
+}
+
+function SpeciesCard({ species, currentMonth }: { species: EspecieRestricao; currentMonth: number }) {
   const [expanded, setExpanded] = useState(false);
-  const isAtiva = MES_ATUAL >= especie.mesInicio && MES_ATUAL <= especie.mesFim;
-
+  const activeMonths = monthList(species);
+  const active = activeMonths.includes(currentMonth);
   return (
-    <TouchableOpacity
-      style={[styles.especieCard, isAtiva && styles.especieCardAtiva]}
-      onPress={() => setExpanded(e => !e)}
-      activeOpacity={0.8}
-    >
-      <View style={styles.especieHeader}>
-        <View style={styles.especieLeft}>
-          <View style={[styles.statusDot, { backgroundColor: isAtiva ? Colors.nivel3 : Colors.nivel1 }]} />
-          <View>
-            <Text style={styles.especieNomePopular}>{especie.nomePopular}</Text>
-            <Text style={styles.especieNomeCientifico}>{especie.nome}</Text>
-          </View>
-        </View>
-        <View style={styles.especieRight}>
-          {isAtiva ? (
-            <View style={styles.ativaBadge}>
-              <Text style={styles.ativaText}>ATIVA</Text>
-            </View>
-          ) : (
-            <View style={styles.inativaBadge}>
-              <Text style={styles.inativaText}>Inativa</Text>
-            </View>
-          )}
-          <Text style={styles.expandIcon}>{expanded ? '▲' : '▼'}</Text>
-        </View>
+    <Card onPress={() => setExpanded(value => !value)} accessibilityLabel={`${species.nomePopular}, ${active ? 'restrição ativa' : 'restrição fora do mês'}, ${expanded ? 'recolher' : 'expandir'} detalhes`} style={[styles.speciesCard, active && styles.activeCard]}>
+      <View style={styles.speciesHeader}>
+        <View style={[styles.speciesIcon, { backgroundColor: active ? Colors.nivel3Bg : Colors.primaryLight }]}><AppIcon name="leaf-outline" color={active ? Colors.nivel3 : Colors.primary} /></View>
+        <View style={styles.speciesCopy}><Text style={styles.speciesName}>{species.nomePopular}</Text><Text style={styles.scientific}>{species.nome}</Text></View>
+        <View style={styles.speciesStatus}><Pill label={active ? 'Ativa' : 'Fora do mês'} tone={active ? 'red' : 'green'} /><AppIcon name={expanded ? 'chevron-up' : 'chevron-down'} size={18} color={Colors.textTertiary} /></View>
       </View>
-
-      {/* BARRA DO CALENDÁRIO */}
-      <View style={styles.calendarioBar}>
-        {MESES.map((m, i) => {
-          const mes = i + 1;
-          const emRestricao = mes >= especie.mesInicio && mes <= especie.mesFim;
-          const isHoje = mes === MES_ATUAL;
-          return (
-            <View key={m} style={styles.mesContainer}>
-              <View
-                style={[
-                  styles.mesBarra,
-                  { backgroundColor: emRestricao ? Colors.nivel3 : Colors.border },
-                  isHoje && styles.mesHoje,
-                ]}
-              />
-              <Text style={[styles.mesLabel, isHoje && styles.mesLabelHoje]}>{m}</Text>
-            </View>
-          );
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.calendar} nestedScrollEnabled>
+        {MONTHS.map((label, index) => {
+          const month = index + 1; const restricted = activeMonths.includes(month); const current = month === currentMonth;
+          return <View key={label} style={styles.monthCell}><View style={[styles.monthBar, restricted && styles.monthRestricted, current && styles.monthCurrent]} /><Text style={[styles.monthLabel, current && styles.monthLabelCurrent]}>{label}</Text></View>;
         })}
-      </View>
-
-      {expanded && (
-        <View style={styles.especieDetalhes}>
-          <Divider />
-          <View style={styles.detalheRow}>
-            <Text style={styles.detalheIcon}>📅</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.detalheLabel}>Período de Restrição</Text>
-              <Text style={styles.detalheValue}>{especie.periodoRestricao}</Text>
-            </View>
-          </View>
-          <View style={styles.detalheRow}>
-            <Text style={styles.detalheIcon}>🚫</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.detalheLabel}>Restrição Operacional</Text>
-              <Text style={styles.detalheValue}>{especie.tipoRestricao}</Text>
-            </View>
-          </View>
-          <View style={styles.detalheRow}>
-            <Text style={styles.detalheIcon}>📍</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.detalheLabel}>Trechos Afetados</Text>
-              <Text style={styles.detalheValue}>{especie.kmAfetados}</Text>
-            </View>
-          </View>
-          <View style={styles.detalheRow}>
-            <Text style={styles.detalheIcon}>⚡</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.detalheLabel}>Nível de Risco</Text>
-              <Text style={[
-                styles.detalheValue,
-                { color: especie.nivelRisco === 'alto' ? Colors.nivel3 : Colors.nivel2 }
-              ]}>
-                {especie.nivelRisco === 'alto' ? '🔴 Alto — Autuação IBAMA/CETESB' : '🟡 Médio — Monitoramento'}
-              </Text>
-            </View>
-          </View>
-        </View>
-      )}
-    </TouchableOpacity>
+      </ScrollView>
+      {expanded ? <View style={styles.details}><Divider /><View style={styles.detailRow}><AppIcon name="calendar-outline" size={19} color={Colors.primary} /><View style={styles.detailCopy}><Text style={styles.detailLabel}>Período demonstrativo</Text><Text style={styles.detailValue}>{species.periodoRestricao}</Text></View></View><View style={styles.detailRow}><AppIcon name="ban-outline" size={19} color={Colors.alertaAmbiental} /><View style={styles.detailCopy}><Text style={styles.detailLabel}>Restrição operacional</Text><Text style={styles.detailValue}>{species.tipoRestricao}</Text></View></View><View style={styles.detailRow}><AppIcon name="location-outline" size={19} color={Colors.primary} /><View style={styles.detailCopy}><Text style={styles.detailLabel}>Trechos associados</Text><Text style={styles.detailValue}>{species.kmAfetados}</Text></View></View><View style={styles.detailRow}><AppIcon name="pulse-outline" size={19} color={species.nivelRisco === 'alto' ? Colors.nivel3 : Colors.nivel2} /><View style={styles.detailCopy}><Text style={styles.detailLabel}>Nível de atenção</Text><Text style={styles.detailValue}>{species.nivelRisco === 'alto' ? 'Alto' : 'Médio'}</Text></View></View></View> : null}
+    </Card>
   );
 }
 
-export default function FaunaScreen({ navigation }: { navigation: any }) {
-  const { state } = useAppStore();
-  const restricoesAtivas = state.fauna.filter(
-    e => MES_ATUAL >= e.mesInicio && MES_ATUAL <= e.mesFim
-  );
-
+export default function FaunaScreen() {
+  const { state, error, retry } = useAppStore();
+  const active = state.fauna.filter(species => monthList(species).includes(state.config.mes));
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
-
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>Restrições de Fauna</Text>
-          <Text style={styles.headerSub}>SP-021 · Calendário Anual · SP</Text>
-        </View>
-        {restricoesAtivas.length > 0 && (
-          <View style={styles.alertaBadge}>
-            <Text style={styles.alertaBadgeText}>{restricoesAtivas.length} ativa{restricoesAtivas.length > 1 ? 's' : ''}</Text>
+    <Page>
+      <ScreenHeader title="Restrições de fauna" subtitle={`Calendário demonstrativo · mês ${String(state.config.mes).padStart(2, '0')}`} right={<DemoBadge label="Dados fictícios" />} />
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Content style={styles.content}>
+          {error ? <MessageBanner tone="error" title="Calendário indisponível" message={error} actionLabel="Tentar novamente" onAction={retry} /> : null}
+          {active.length ? <MessageBanner tone="warning" title={`${active.length} restrição(ões) ativa(s) no mês selecionado`} message="Consulte as espécies e os trechos antes de iniciar uma intervenção. As regras abaixo são dados de demonstração." /> : <MessageBanner tone="success" title="Nenhuma restrição ativa no mês" message="O acompanhamento continua disponível. Esta indicação usa somente os dados fictícios do protótipo." />}
+          <Card style={styles.legendCard}><SectionHeader title="Como ler o calendário" /><View style={styles.legendRow}><View style={[styles.legendBox, { backgroundColor: Colors.nivel3 }]} /><Text style={styles.legendText}>Mês com restrição demonstrativa</Text></View><View style={styles.legendRow}><View style={[styles.legendBox, { backgroundColor: Colors.borderStrong }]} /><Text style={styles.legendText}>Mês fora do período</Text></View><View style={styles.legendRow}><View style={[styles.legendBox, styles.legendCurrent]} /><Text style={styles.legendText}>Mês selecionado nas configurações</Text></View></Card>
+          <SectionHeader title="Espécies monitoradas" subtitle={`${state.fauna.length} registro(s) no intervalo gerenciado`} />
+          <View style={styles.list}>{state.fauna.map(species => <SpeciesCard key={species.id} species={species} currentMonth={state.config.mes} />)}
+            {!state.fauna.length ? <StatePanel icon="leaf-outline" title="Nenhuma espécie no cenário atual" message="A lista vazia é intencional e permanece navegável. Altere o cenário ou o intervalo em Mais." /> : null}
           </View>
-        )}
-      </View>
-
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-
-        {/* AVISO MES ATUAL */}
-        {restricoesAtivas.length > 0 && (
-          <View style={styles.avisoAtual}>
-            <Text style={styles.avisoIcon}>🦜</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.avisoTitle}>
-                {restricoesAtivas.length} espécie{restricoesAtivas.length > 1 ? 's' : ''} em período restrito agora
-              </Text>
-              <Text style={styles.avisoText}>
-                Roçada mecanizada bloqueada nos trechos afetados. Consulte os detalhes abaixo.
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {/* LEGENDA */}
-        <Card style={styles.legendaCard}>
-          <Text style={styles.legendaTitle}>Como ler o calendário</Text>
-          <View style={styles.legendaRow}>
-            <View style={[styles.legendaDot, { backgroundColor: Colors.nivel3 }]} />
-            <Text style={styles.legendaText}>Mês em período de restrição — Roçada mecanizada proibida</Text>
-          </View>
-          <View style={styles.legendaRow}>
-            <View style={[styles.legendaDot, { backgroundColor: Colors.border }]} />
-            <Text style={styles.legendaText}>Mês fora do período — Operação normal permitida</Text>
-          </View>
-          <View style={styles.legendaRow}>
-            <View style={[styles.legendaDot, { backgroundColor: Colors.primary, borderWidth: 2, borderColor: Colors.primaryDark }]} />
-            <Text style={styles.legendaText}>Mês atual destacado</Text>
-          </View>
-        </Card>
-
-        {/* ESPÉCIES */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Espécies Monitoradas</Text>
-          <Text style={styles.sectionSub}>Fauna nativa catalogada — CETESB/SMA-SP</Text>
-        </View>
-
-        {state.fauna.map(e => (
-          <CalendarioEspecie key={e.id} especie={e} />
-        ))}
-
-        <View style={{ height: Spacing.xxxl }} />
+          <MessageBanner message="Notificações em segundo plano ainda dependem de integração futura. Nesta Sprint, a caixa de entrada usa eventos simulados e visíveis." />
+        </Content>
       </ScrollView>
-    </SafeAreaView>
+    </Page>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.background },
-
-  header: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: Spacing.base, paddingTop: Spacing.md, paddingBottom: Spacing.base,
-    backgroundColor: Colors.surface, borderBottomWidth: 1, borderBottomColor: Colors.border,
-  },
-  headerTitle: { fontSize: Typography.size.xl, fontWeight: Typography.weight.extrabold, color: Colors.textPrimary },
-  headerSub: { fontSize: Typography.size.sm, color: Colors.textMuted, marginTop: 2 },
-  alertaBadge: {
-    backgroundColor: Colors.nivel3Bg, borderRadius: BorderRadius.full,
-    paddingHorizontal: Spacing.md, paddingVertical: 6,
-  },
-  alertaBadgeText: { fontSize: Typography.size.sm, fontWeight: Typography.weight.bold, color: Colors.nivel3 },
-
-  scroll: { flex: 1 },
-  scrollContent: { padding: Spacing.base, gap: Spacing.md },
-
-  avisoAtual: {
-    flexDirection: 'row', gap: Spacing.md,
-    backgroundColor: Colors.nivel3Bg, borderWidth: 1.5, borderColor: Colors.nivel3,
-    borderRadius: BorderRadius.md, padding: Spacing.base,
-  },
-  avisoIcon: { fontSize: 28 },
-  avisoTitle: { fontSize: Typography.size.base, fontWeight: Typography.weight.bold, color: Colors.nivel3 },
-  avisoText: { fontSize: Typography.size.sm, color: Colors.nivel3, marginTop: 4, opacity: 0.9, lineHeight: 20 },
-
-  legendaCard: { gap: Spacing.sm },
-  legendaTitle: { fontSize: Typography.size.sm, fontWeight: Typography.weight.bold, color: Colors.textPrimary, marginBottom: 4 },
-  legendaRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.sm },
-  legendaDot: { width: 12, height: 12, borderRadius: 2 },
-  legendaText: { fontSize: Typography.size.sm, color: Colors.textSecondary, flex: 1 },
-
-  section: { gap: 2 },
-  sectionTitle: { fontSize: Typography.size.lg, fontWeight: Typography.weight.bold, color: Colors.textPrimary },
-  sectionSub: { fontSize: Typography.size.sm, color: Colors.textMuted },
-
-  especieCard: {
-    backgroundColor: Colors.surface, borderRadius: BorderRadius.lg,
-    padding: Spacing.md, borderWidth: 1, borderColor: Colors.border,
-    ...Shadow.sm,
-  },
-  especieCardAtiva: {
-    borderColor: Colors.nivel3, borderWidth: 1.5,
-  },
-  especieHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  especieLeft: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md, flex: 1 },
-  statusDot: { width: 12, height: 12, borderRadius: 6 },
-  especieNomePopular: { fontSize: Typography.size.base, fontWeight: Typography.weight.bold, color: Colors.textPrimary },
-  especieNomeCientifico: { fontSize: Typography.size.xs, color: Colors.textMuted, fontStyle: 'italic', marginTop: 1 },
-  especieRight: { alignItems: 'flex-end', gap: 6 },
-  ativaBadge: {
-    backgroundColor: Colors.nivel3Bg, borderRadius: BorderRadius.full,
-    paddingHorizontal: 8, paddingVertical: 3,
-  },
-  ativaText: { fontSize: 10, fontWeight: Typography.weight.extrabold, color: Colors.nivel3, letterSpacing: 0.5 },
-  inativaBadge: {
-    backgroundColor: Colors.nivel1Bg, borderRadius: BorderRadius.full,
-    paddingHorizontal: 8, paddingVertical: 3,
-  },
-  inativaText: { fontSize: 10, fontWeight: Typography.weight.semibold, color: Colors.nivel1, letterSpacing: 0.5 },
-  expandIcon: { fontSize: 10, color: Colors.textMuted },
-
-  calendarioBar: {
-    flexDirection: 'row', gap: 3, marginTop: Spacing.md,
-  },
-  mesContainer: { flex: 1, alignItems: 'center', gap: 4 },
-  mesBarra: {
-    height: 20, width: '100%', borderRadius: 3,
-  },
-  mesHoje: { borderWidth: 2, borderColor: Colors.primary },
-  mesLabel: { fontSize: 9, color: Colors.textMuted, fontWeight: Typography.weight.medium },
-  mesLabelHoje: { color: Colors.primary, fontWeight: Typography.weight.bold },
-
-  especieDetalhes: { marginTop: Spacing.md, gap: Spacing.sm },
-  detalheRow: { flexDirection: 'row', gap: Spacing.sm, alignItems: 'flex-start' },
-  detalheIcon: { fontSize: 16, width: 24, textAlign: 'center', marginTop: 2 },
-  detalheLabel: { fontSize: Typography.size.xs, color: Colors.textMuted, fontWeight: Typography.weight.medium, marginBottom: 2 },
-  detalheValue: { fontSize: Typography.size.sm, color: Colors.textSecondary, lineHeight: 20 },
+  scroll: { paddingBottom: Spacing.xxxl }, content: { gap: Spacing.xl }, legendCard: { gap: Spacing.sm }, legendRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }, legendBox: { width: 20, height: 12, borderRadius: 3 }, legendCurrent: { backgroundColor: Colors.surface, borderWidth: 2, borderColor: Colors.primary }, legendText: { color: Colors.textSecondary, fontSize: Typography.size.sm, lineHeight: 20 }, list: { gap: Spacing.md },
+  speciesCard: { gap: Spacing.md }, activeCard: { borderColor: Colors.nivel3, borderWidth: 1.5 }, speciesHeader: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: Spacing.md }, speciesIcon: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' }, speciesCopy: { flexGrow: 1, flexShrink: 1, flexBasis: 180, minWidth: 160 }, speciesName: { color: Colors.textPrimary, fontSize: Typography.size.base, fontWeight: Typography.weight.extrabold }, scientific: { color: Colors.textTertiary, fontSize: Typography.size.xs, fontStyle: 'italic', marginTop: 2 }, speciesStatus: { marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: Spacing.sm },
+  calendar: { minWidth: 520, gap: 5, paddingVertical: Spacing.xs }, monthCell: { width: 38, alignItems: 'center', gap: 5 }, monthBar: { width: 34, height: 18, borderRadius: 4, backgroundColor: Colors.borderStrong }, monthRestricted: { backgroundColor: Colors.nivel3 }, monthCurrent: { borderWidth: 2, borderColor: Colors.primaryDark }, monthLabel: { color: Colors.textTertiary, fontSize: Typography.size.xs, fontWeight: Typography.weight.semibold }, monthLabelCurrent: { color: Colors.primaryDark, fontWeight: Typography.weight.extrabold },
+  details: { gap: Spacing.md }, detailRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.sm }, detailCopy: { flex: 1 }, detailLabel: { color: Colors.textTertiary, fontSize: Typography.size.xs, fontWeight: Typography.weight.bold, marginBottom: 2 }, detailValue: { color: Colors.textSecondary, fontSize: Typography.size.sm, lineHeight: 21 },
 });

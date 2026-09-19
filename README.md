@@ -1,203 +1,121 @@
-# VegTrack — App Mobile
+# VegTrack
 
-> **Ecossistema de inteligência ecológica e operacional para conservação de rodovias**  
-> Concessionária Motiva · SP-021 Rodovia Anchieta · Sprint 2
+Aplicativo para acompanhar a vegetação de trechos de rodovia e organizar ordens de serviço. Projeto acadêmico do Challenge Motiva, FIAP.
 
----
+[Repositório da Sprint 3](https://github.com/RogerioOxy/VegTrack-Sprint3).
 
-## 👥 Integrantes
+## Integrantes
 
 | Nome | RM |
-|------|-----|
-|Luis Otavio Santini Feitosa | 563556 |
-|Rogério Deligi	| 561942 |
-|Maria Fernanda Garavelli |	562686 |
-|Vitor Barbosa de Paiva	| 565303 |
-|Arthur Traldi Felix	| 563477 |
-|Lucas Andrade de Souza | 564066 |
----
+|---|---|
+| Rogério Deligi Ferreira Filho | 561942 |
+| Maria Fernanda Garavelli Dantas | 562686 |
 
-## 📋 Sobre o Projeto
+Identificação da Sprint 3 confirmada pela dupla.
 
-O **VegTrack** é uma solução mobile desenvolvida para supervisores de campo da **CCR Motiva**, substituindo o modelo reativo de inspeção de vegetação em rodovias por um **Modelo de Intervenção Direcionada por Dados**.
+## Proposta e continuidade
 
-O app resolve três problemas críticos da operação:
-1. **Cegueira territorial** — mapa de calor por KM elimina inspeções manuais em toda a rodovia
-2. **Risco regulatório** — alertas proativos de Nível 3 ARTESP antes da fiscalização agir
-3. **Passivos ambientais** — motor de restrição de fauna bloqueia roçada mecanizada em períodos reprodutivos
+O VegTrack foi pensado para o supervisor que precisa decidir quais trechos devem receber uma vistoria ou intervenção. A persona é Carlos, o Cadú: ele acompanha as equipes e precisa consultar o histórico sem depender de planilhas separadas.
 
----
+Na Sprint 1, o grupo definiu os requisitos e o [protótipo navegável](https://www.figma.com/proto/5oamsogahmd7Se6ZgcjV5S/VegTrack-%E2%80%94-Prot%C3%B3tipo?node-id=2-3&scaling=scale-down&page-id=0%3A1&starting-point-node-id=2%3A3). A [Sprint 2](https://github.com/lucasouza06/Challenge-Sprint02-CPAD) trouxe o mapa esquemático, as ordens, os levantamentos e o calendário de fauna.
 
-## 🚀 Instalação e Execução
+Nesta Sprint 3, completamos a implementação dos caminhos de uso, a persistência e os cenários de demonstração. Mantivemos React Native, Expo, TypeScript, React Navigation e Context API para aproveitar a base existente. Não houve migração para Flutter. A base anterior está no commit `6739faf2d18793fb89dd06161c88be8ac3135676`.
 
-### Pré-requisitos
+Usamos a organização de telas do protótipo e o tema claro, verde e branco da Sprint 2. Os ajustes priorizam leitura, retornos de erro e áreas de toque.
 
-- Node.js 18+
-- Expo CLI: `npm install -g expo-cli`
-- App **Expo Go** instalado no celular (Android/iOS) — ou emulador configurado
+## Executar
 
-### Passo a Passo
+O projeto usa Expo SDK 51, React Native 0.74 e React 18. Com Node.js e npm instalados, execute na raiz do repositório:
 
-```bash
-# 1. Clone o repositório
-git clone https://github.com/lucasouza06/Challenge-Sprint02-CPAD.git
-cd vegtrack-sprint2/mobile
-
-# 2. Instale as dependências
-npm install
-
-# 3. Inicie o servidor de desenvolvimento
-npx expo start
-
-# 4. Escaneie o QR Code com o Expo Go (Android) ou câmera (iOS)
-#    — ou pressione 'a' para emulador Android / 'i' para iOS
+```sh
+npm ci
+npm start
 ```
 
-### Executar em dispositivo físico (recomendado para GPS e câmera)
+No Android, use o [Expo Go compatível com o SDK 51](https://expo.dev/go?device=true&platform=android&sdkVersion=51). A versão atual da loja pode não abrir este projeto. Abra primeiro o Expo Go no aparelho ou emulador e aguarde sua tela inicial. Depois abra o projeto pelo QR Code ou endereço exibido no terminal. No emulador, o SDK Android deve estar configurado em `ANDROID_HOME` para usar `npm run android`. Computador e celular precisam acessar o servidor de desenvolvimento.
 
-```bash
-npx expo start --tunnel
+```sh
+npm run web
+npm test
+npm run typecheck
+npm run export:web
 ```
 
-> ⚠️ **Importante**: Use `--tunnel` se estiver em rede diferente do dispositivo.
+O navegador é apoio aos testes; não substitui o dispositivo ou emulador exigido no vídeo.
 
----
+## Acesso de demonstração
 
-## 📁 Estrutura do Projeto
+| Perfil | E-mail | Senha | Uso |
+|---|---|---|---|
+| Supervisor | supervisor@vegtrack.demo | vegtrack123 | Consulta, cadastro, execução, configuração e escala de urgência |
+| Técnico | tecnico@vegtrack.demo | vegtrack123 | Consulta, levantamentos e execução |
+| Gestor | gestor@vegtrack.demo | vegtrack123 | Consulta e exportação |
 
-```
-mobile/
-├── App.tsx                          # Ponto de entrada — Provider + Navigator
-├── app.json                         # Configuração Expo (permissões, targets)
-├── package.json
-└── src/
-    ├── screens/
-    │   ├── DashboardScreen.tsx      # RF001 — Mapa de calor + stats gerais
-    │   ├── OrdensScreen.tsx         # RF007/RF008 — Listagem e gestão de OS
-    │   ├── NovoLevantamentoScreen.tsx  # RF002 — Registro de levantamento em campo
-    │   └── FaunaScreen.tsx          # RF004/RF005 — Calendário de restrições
-    ├── components/
-    │   └── index.tsx                # NivelBadge, StatusBadge, Card, PrimaryButton, etc.
-    ├── store/
-    │   └── AppContext.tsx           # Context API + Reducer — Estado global
-    ├── services/
-    │   └── navigation.tsx           # React Navigation — Bottom Tabs + Stack
-    └── utils/
-        ├── mockData.ts              # 📦 MOCKS — Dados realistas contextualizados
-        └── theme.ts                 # Design tokens — cores, tipografia, espaçamentos
-```
+São contas fictícias. Não use senhas pessoais. O login não consulta servidor nem emite JWT, e a senha não fica no armazenamento local.
 
----
+## Status por funcionalidade
 
-## 📦 Mocks Utilizados
+Os fluxos foram verificados no Android 14 emulado, com testes complementares no navegador. O PDF também foi gerado no Android, salvo e conferido. A demonstração foi gravada com 2min55s; a publicação no YouTube está na etapa final.
 
-Todos os mocks estão em `src/utils/mockData.ts` e representam dados reais da operação da Motiva.
+| Requisito | Comportamento da Sprint 3 | Situação |
+|---|---|---|
+| RF001 | Mapa esquemático interativo, filtros e detalhe | Verificado no Android e no navegador |
+| RF002 | Levantamento com altura, observação, GPS e anexo simulados | Verificado no Android e no navegador |
+| RF003 | Histórico por trecho e tendência das medições | Verificado no Android e no navegador |
+| RF004 | Alerta ambiental e bloqueio de intervenção mecanizada no mock | Verificado no Android e no navegador |
+| RF005 | Calendário com meses e trechos relacionados | Verificado no Android e no navegador |
+| RF006 | Caixa de avisos e entrada simulada em período restrito | Mock verificado no Android; push real pendente |
+| RF007 | Criação de OS para medição crítica, sem duplicar OS aberta | Verificado no Android e no navegador |
+| RF008 | Filtros por status, método e urgência; início e escala | Verificado no Android e no navegador |
+| RF009 | Conclusão com evidência, localização e data | Verificado no Android e no navegador |
+| RF010 | Login fictício e permissões por perfil | Mock verificado no Android; autenticação real pendente |
+| RF011 | Intervalo gerenciado aplicado às consultas | Verificado no Android e no navegador |
+| RF012 | Relatório de ordens concluídas e exportação em PDF | Verificado no Android: PDF salvo com foto e créditos |
 
-### `mockTrechos` — Segmentos da SP-021
+Veja [Testes manuais](docs/TESTES-MANUAIS.md) e [validação técnica](docs/VALIDACAO.md). O Android foi testado em emulador; iOS e aparelho físico não foram verificados.
 
-Representa **8 segmentos de 500m** entre o KM 23 e KM 67 da SP-021 Rodovia Anchieta, com dados contextualizados:
+## Telas e relatório
 
-| Campo | Exemplo | Contexto |
-|-------|---------|----------|
-| `kmInicial/kmFinal` | `23.0 / 23.5` | Segmentação a cada 500m conforme Caderno de Encargos ARTESP |
-| `faixa` | `"Faixa Marginal Direita"` | Faixas reais fiscalizadas: Canteiro Central (interno/externo), Marginal (D/E) |
-| `alturaVegetacaoCm` | `47` | Altura real medida em campo; >30cm = Nível 3 (infração) |
-| `nivelArtesp` | `3` | Classificação 1–3 do Caderno de Encargos ARTESP |
-| `diasSemRocada` | `38` | Indicador operacional de urgência |
-| `restricaoAmbiental` | `true` | Cruzamento com calendário de fauna protegida |
-| `especieEmRestricao` | `"Turdus rufiventris (Sabiá-laranjeira)"` | Espécie real catalogada CETESB/SMA-SP |
+<p>
+  <img src="docs/imagens/dashboard-android.png" alt="Dashboard no Android" width="230">
+  <img src="docs/imagens/historico-android.png" alt="Histórico e tendência" width="230">
+  <img src="docs/imagens/conclusao-android.png" alt="Confirmação de conclusão" width="230">
+</p>
 
-**Distribuição dos níveis nos mocks:**
-- Nível 3 (Crítico): 4 trechos → `trecho_001`, `trecho_004`, `trecho_005`, `trecho_008`
-- Nível 2 (Atenção): 2 trechos → `trecho_002`, `trecho_006`
-- Nível 1 (Conforme): 2 trechos → `trecho_003`, `trecho_007`
+[Exemplo de PDF exportado pelo Android](docs/EXEMPLO-RELATORIO.pdf). O arquivo usa dados fictícios e uma foto de exemplo identificada.
 
----
+## Mocks e limites
 
-### `mockOrdens` — Ordens de Serviço
+Os registros são fictícios, não dados fornecidos pela Motiva. Alturas, prazos, coordenadas, meses de restrição e regras de intervenção são parâmetros de demonstração. Os níveis 1, 2 e 3 não certificam uma norma da ARTESP.
 
-**5 OS** representando cenários reais do pipeline operacional:
+O mapa é esquemático, sem serviço cartográfico. O anexo é uma fotografia real de exemplo, com [autoria e licença documentadas](docs/CREDITOS.md). Ela não foi capturada pelo grupo e não corresponde ao trecho ou às coordenadas simuladas. GPS e câmera reais não são acionados automaticamente. A fauna usa o mês simulado configurado no app para permitir testes reproduzíveis.
 
-| OS | Cenário Simulado |
-|----|-----------------|
-| `OS-2025-0847` | Nível 3 sem restrição → roçada **mecanizada** em 48h |
-| `OS-2025-0848` | Nível 3 + Jararaca → roçada **mecanizada bloqueada**, substituída por **manual seletiva** |
-| `OS-2025-0831` | Em execução com restrição Sabiá-laranjeira ativa |
-| `OS-2025-0802` | Pendente urgente, sem restrição |
-| `OS-2025-0788` | **Concluída** — histórico de conformidade |
+Os cenários permitem conferir funcionamento normal, listas vazias, falha com nova tentativa e operação offline. Vazio não apaga a base normal. A fila offline e a sincronização são simuladas, sem envio a uma API.
 
----
+Os dados ficam no AsyncStorage, que não é criptografado. O app não implementa SSO, integração FastAPI/GBIF, segurança de produção ou auditoria imutável. O histórico local demonstra o fluxo.
 
-### `mockFauna` — Calendário de Restrições
+## Organização
 
-**3 espécies** nativas de SP com dados reais de restrição:
+- `src/screens` e `src/components`: telas e componentes reutilizáveis.
+- `src/store` e `src/domain`: estado, persistência e regras dos mocks.
+- `src/services`: navegação, evidência e relatórios.
+- `src/utils`: dados iniciais e tema.
+- `assets`: ícones e fotografia de exemplo licenciada.
+- `tests` e `docs`: testes, resultados e roteiro.
 
-| Espécie | Nome Popular | Período | Restrição |
-|---------|-------------|---------|-----------|
-| `Turdus rufiventris` | Sabiá-laranjeira | Ago–Dez | Nidificação — proibido roçada mecanizada |
-| `Bothrops jararaca` | Jararaca | Mar–Jun | Acasalamento — proibido roçada mecânica pesada |
-| `Didelphis albiventris` | Gambá-de-orelha-branca | Jan–Mar | Lactação — reduzir velocidade de roçadeiras |
+## Pendências e plano da Sprint 4
 
-> Espécies catalogadas com base em dados da CETESB, SMA-SP e registros GBIF para bbox do estado de SP.
+1. Repetir os testes no aparelho da apresentação e validar câmera, GPS e permissões quando conectados aos sensores reais.
+2. Substituir os serviços simulados pelos contratos da API, mantendo os estados de carregamento, vazio e erro. Implementar autenticação no servidor e armazenamento seguro dos tokens.
+3. Integrar push e testar com o app em segundo plano. A caixa de avisos não substitui essa integração.
+4. Validar regras operacionais e ambientais com fontes do projeto antes de substituir os parâmetros fictícios.
+5. Tratar conflitos, duplicação de pedidos e proteção dos dados na sincronização real.
+6. Planejar atualização do Expo com testes de regressão. Esta entrega mantém o SDK 51 por continuidade com a Sprint 2.
 
----
+Os problemas encontrados e os ajustes já testados estão no documento de testes manuais. A validação nativa desta Sprint foi concluída. O teste em aparelho físico e a integração real dos sensores continuam no plano da Sprint 4. Build e teste automatizado não substituem a execução manual.
 
-### `mockHistoricoLevantamentos` — Histórico
+## Demonstração e entrega
 
-**3 registros históricos** para o `trecho_001` (KM 23.0–23.5), mostrando progressão do crescimento de vegetação ao longo de 3 meses — base para o gráfico de tendência (RF003).
+Veja [Roteiro do vídeo](docs/ROTEIRO-VIDEO.md). A gravação da Sprint 3 está concluída (2min55s), com legendas e imagens reais do emulador Android. O link não listado será incluído após a publicação. O vídeo da Sprint 2 não comprova esta versão.
 
----
-
-## 🔄 Fluxo Completo Demonstrado
-
-**Fluxo: Técnico registra levantamento crítico → Sistema gera OS automaticamente**
-
-1. Usuário abre a tela **Dashboard** → visualiza mapa de calor e trechos críticos
-2. Toca em um trecho vermelho (Nível 3) → abre **Novo Levantamento** pré-preenchido
-3. GPS captura coordenadas automaticamente (simulado com latência real)
-4. Usuário informa altura da vegetação (ex: `47cm`)
-5. App exibe em tempo real: `Nível 3 — Crítico · OS será gerada automaticamente`
-6. Se o trecho tem restrição ambiental, exibe **Alerta Ambiental Crítico** com espécie
-7. Usuário confirma → levantamento é salvo e OS é gerada automaticamente
-8. OS gerada com método correto:
-   - Sem restrição → `roçada mecanizada`, prazo 48h, status `pendente`
-   - Com restrição → `roçada manual seletiva`, status `bloqueada`, com justificativa
-9. Tela de confirmação exibe o número da OS e motivo do método escolhido
-10. Estado global atualizado: contadores do dashboard refletem a nova OS
-
----
-
-## 📱 Telas Implementadas
-
-| Tela | Arquivo | Requisitos Cobertos |
-|------|---------|---------------------|
-| Dashboard | `DashboardScreen.tsx` | RF001, RF003 (parcial) |
-| Ordens de Serviço | `OrdensScreen.tsx` | RF007, RF008 |
-| Novo Levantamento | `NovoLevantamentoScreen.tsx` | RF002, RF004, RF007, RF009 (parcial) |
-| Fauna & Restrições | `FaunaScreen.tsx` | RF004, RF005 |
-
----
-
-## 🛡️ Conformidade com Requisitos Não-Funcionais
-
-| RNF | Implementado |
-|-----|-------------|
-| RNF002 — GPS precisão | Mock simula accuracy real com aviso se >25m |
-| RNF005 — Android 10+ / iOS 14+ | `targetSdkVersion: 34`, `deploymentTarget: 14.0` |
-| RNF006 — Usabilidade campo | Área de toque mínima 48dp, botões 56dp, fonte base 16sp, tema claro |
-| RNF004 — Segurança | Estrutura preparada para `expo-secure-store` (JWT); GPS não logado em texto |
-
----
-
-## 🎥 Vídeo de Demonstração
-
-[YouTube — não listado](https://youtu.be/1TPgrU_rzcM)
-
----
-
-## 📌 Observações Técnicas da Sprint 2
-
-- **Mocks são intencionais** — integração com FastAPI backend ocorrerá na Sprint 3
-- A estrutura de `services/` está preparada para substituição de mocks por chamadas reais à API (`/api/v1/trechos`, `/api/v1/ordens`, `/api/v1/restricoes-fauna`)
-- O `AppContext` com Reducer reflete a arquitetura que será mantida após integração real — apenas a camada de dados muda
-- GPS e câmera: simulados nesta Sprint com comportamento realista (latência, accuracy, alertas)
+O envio formal contém apenas um TXT com integrantes confirmados, repositório atualizado e vídeo da Sprint 3.
